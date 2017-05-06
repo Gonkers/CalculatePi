@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 
 namespace RandomNumbers
 {
-    class Program
+    static class Program
     {
+        // Start each run with a unique seed
         static int seed = Environment.TickCount;
 
+        // Ensure each thread has it's own Random with a unique seed
         static readonly ThreadLocal<Random> Rng =
             new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref seed)));
 
-        static object Lock = new object();
         static int Coprimes = 0;
 
         static void Main(string[] args)
@@ -27,7 +28,7 @@ namespace RandomNumbers
             }
             var timer = Stopwatch.StartNew();
 
-            Parallel.For(0, count, (i) => { GenerateCoprime(); });
+            Parallel.For(0, count, (i) => GenerateCoprime());
             timer.Stop();
 
             Console.WriteLine();
